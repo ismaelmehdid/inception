@@ -14,6 +14,8 @@ services:
       - "./.env"
     networks:
       - main
+
+
   wordpress:
     build:
       context: ./requirements/wordpress/
@@ -27,6 +29,8 @@ services:
       - main
     depends_on:
       - mariadb
+
+      
   nginx:
     build:
       context: ./requirements/nginx/
