@@ -13,10 +13,11 @@ clean:
 	@echo "\033[93mAll services have been shutted down.\033[0m"
 
 fclean: clean
-	
-	@echo "\033[93mAll the images has been deleted.\033[0m"
-
+	docker system prune -f -a
+	rm -rf /home/imehdid/data/db/*
+	rm -rf /home/imehdid/data/wp/*
+	@echo "\033[93mAll the images have been deleted.\033[0m"
 
 re: clean all
 
-.PHONY: all clean re
+.PHONY: all clean re fclean

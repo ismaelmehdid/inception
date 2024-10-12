@@ -1,19 +1,44 @@
-version: "3.8"
+version: "3"
 
 services:
+  mariadb:
+    build:
+      context: ./requirements/mariadb/
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - /home/imehdid/data/db:/var/lib/mysql
+    env_file:
+      - "./.env"
+    networks:
+      - main
+  wordpress:
+    build:
+      context: ./requirements/wordpress/
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    restart: always
+    volumes:
+      - /home/imehdid/data/wp:/var/www/html
+    networks:
+      - main
+    depends_on:
+      - mariadb
   nginx:
     build:
       context: ./requirements/nginx/
-    image: nginx
+    container_name: nginx
     ports:
-      - "443:80"
+      - "443:443"
     restart: always
+    volumes:
+      - /home/imehdid/data/wp:/var/www/html
     networks:
       - main
 
 networks:
   main:
-    ipam:
-      driver: default
-      config:
-        - subnet: "192.168.92.0/24"
+    driver: bridge
