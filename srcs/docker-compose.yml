@@ -10,11 +10,14 @@ services:
     restart: always
     volumes:
       - /home/imehdid/data/db:/var/lib/mysql
-    env_file:
-      - "./.env"
     networks:
       - main
-
+    secrets:
+      - wpdblogin
+      - wpdbname
+      - wpdbpassword
+      - dbrootlogin
+      - dbrootpassword
 
   wordpress:
     build:
@@ -29,7 +32,17 @@ services:
       - main
     depends_on:
       - mariadb
-
+    secrets:
+      - wpdbhost
+      - wpdblogin
+      - wpdbname
+      - wpdbpassword
+      - wpcontributorpassword
+      - wpcontributorlogin
+      - wpcontributoremail
+      - wpadminpassword
+      - wpadminlogin
+      - wpadminemail
       
   nginx:
     build:
@@ -42,6 +55,39 @@ services:
       - /home/imehdid/data/wp:/var/www/html
     networks:
       - main
+    secrets:
+      - nginx_cert
+      - nginx_key
+
+secrets:
+  nginx_cert:
+    file: ../secrets/nginx/nginx.crt
+  nginx_key:
+    file: ../secrets/nginx/nginx.key
+  wpdbhost:
+    file: ../secrets/wordpress/wpdbhost.txt
+  wpdblogin:
+    file: ../secrets/wordpress/wpdblogin.txt
+  wpdbname:
+    file: ../secrets/wordpress/wpdbname.txt
+  wpdbpassword:
+    file: ../secrets/wordpress/wpdbpassword.txt
+  wpcontributorpassword:
+    file: ../secrets/wordpress/wpcontributorpassword.txt
+  wpcontributorlogin:
+    file: ../secrets/wordpress/wpcontributorlogin.txt
+  wpcontributoremail:
+    file: ../secrets/wordpress/wpcontributoremail.txt
+  wpadminpassword:
+    file: ../secrets/wordpress/wpadminpassword.txt
+  wpadminlogin:
+    file: ../secrets/wordpress/wpadminlogin.txt
+  wpadminemail:
+    file: ../secrets/wordpress/wpadminemail.txt
+  dbrootlogin:
+    file: ../secrets/mariadb/dbrootlogin.txt
+  dbrootpassword:
+    file: ../secrets/mariadb/dbrootpassword.txt
 
 networks:
   main:

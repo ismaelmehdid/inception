@@ -11,5 +11,28 @@ else
     echo "/var/www/html is not empty. Didn't copy any WordPress files."
 fi
 
-wp core install --url=https://imehdid.42.fr --title="Inception" --admin_user=usenv --admin_password=usenv --admin_email=usenv@gmail.com --path=/var/www/html --allow-root
-wp user create usenv2 usenv2@gmail.com --role=contributor --user_pass=usenv --path=/var/www/html --allow-root
+# Export secrets
+export WP_ADMIN_LOGIN=$(cat /run/secrets/wpadminlogin)
+export WP_ADMIN_PASSWORD=$(cat /run/secrets/wpadminpassword)
+export WP_ADMIN_EMAIL=$(cat /run/secrets/wpadminemail)
+export WP_DB_NAME=$(cat /run/secrets/wpdbname)
+export WP_DB_USER=$(cat /run/secrets/wpdblogin)
+export WP_DB_PASSWORD=$(cat /run/secrets/wpdbpassword)
+export WP_DB_HOST=$(cat /run/secrets/wpdbhost)
+
+wp core install \
+    --url=imehdid.42.fr \
+    --title="Inception" \
+    --admin_user=$WP_ADMIN_LOGIN \
+    --admin_password=$WP_ADMIN_PASSWORD \
+    --admin_email=$WP_ADMIN_EMAIL \
+    --path=/var/www/html \
+    --allow-root
+
+wp user create \
+    $(cat /run/secrets/wpcontributorlogin) \
+    $(cat /run/secrets/wpcontributoremail) \
+    --role=contributor \
+    --user_pass=$(cat /run/secrets/wpcontributorpassword) \
+    --path=/var/www/html \
+    --allow-root
