@@ -26,6 +26,6 @@ RUN chmod +x /usr/local/bin/get-wp.sh
 
 EXPOSE 9000
 
-ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/get-wp.sh && php-fpm7.4 --nodaemonize"]
+ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/get-wp.sh && exec php-fpm7.4 --nodaemonize"]
 
 WORKDIR /

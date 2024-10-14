@@ -5,11 +5,12 @@ services:
     build:
       context: ./requirements/mariadb/
     container_name: mariadb
+    image: mariadb:final
     ports:
       - "3306:3306"
     restart: always
     volumes:
-      - /home/imehdid/data/db:/var/lib/mysql
+      - mariadbv:/var/lib/mysql
     networks:
       - main
     secrets:
@@ -23,11 +24,12 @@ services:
     build:
       context: ./requirements/wordpress/
     container_name: wordpress
+    image: wordpress:final
     ports:
       - "9000:9000"
     restart: always
     volumes:
-      - /home/imehdid/data/wp:/var/www/html
+      - wpv:/var/www/html
     networks:
       - main
     depends_on:
@@ -48,16 +50,31 @@ services:
     build:
       context: ./requirements/nginx/
     container_name: nginx
+    image: nginx:final
     ports:
       - "443:443"
     restart: always
     volumes:
-      - /home/imehdid/data/wp:/var/www/html
+      - wpv:/var/www/html
     networks:
       - main
     secrets:
       - nginx_cert
       - nginx_key
+  
+volumes:
+  mariadbv:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/imehdid/data/db
+      o: bind
+  wpv:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/imehdid/data/wp
+      o: bind
 
 secrets:
   nginx_cert:
