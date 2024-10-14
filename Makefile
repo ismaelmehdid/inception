@@ -12,9 +12,17 @@ clean:
 	$(DC_COMMAND) $(FLAGS) down
 	@echo "\033[93mAll services have been shutted down.\033[0m"
 
+DANGLING_VOLUMES := $(shell docker volume ls -q --filter dangling=true)
+
 fclean: clean
 	docker system prune -f -a
+	@if [ -n "$$(docker volume ls -q --filter dangling=true)" ]; then \
+		docker volume rm $$(docker volume ls -q --filter dangling=true); \
+	else \
+		echo "No dangling volumes to remove."; \
+	fi
 	@echo "\033[93mAll the images have been deleted.\033[0m"
+
 
 re: clean all
 
